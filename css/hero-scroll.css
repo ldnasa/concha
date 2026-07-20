@@ -1,0 +1,396 @@
+/* ============================================================
+   Concha - hero-scroll.css
+   Scrollytell do hero: o scroll nativo dirige o video (scrub 1:1).
+   Nao e scroll-jacking: a pagina nunca rouba o controle do scroll,
+   so mapeia a posicao dele pro tempo do video. Carve-out assinatura
+   do DS (specs/foundations/motion.md).
+
+   Todo valor visual vem de design_system/tokens.css.
+   Valores de coreografia (0..1) vivem no JS, nao aqui.
+   ============================================================ */
+
+/* ---------------- Track + stage ---------------- */
+
+.scrolly {
+  /* ~56% do track e o scrub do video; o resto segura o fundo congelado
+     enquanto os dois blocos de texto trocam. */
+  --track: 720vh;
+  position: relative;
+  background: var(--primitive-vinho); /* cor de fundo do fim do video, evita flash branco */
+}
+
+.scrolly-track { height: var(--track); }
+
+.scrolly-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  grid-template-areas: "stage";
+  /* Obrigatorio travar as DUAS dimensoes em minmax(0,1fr).
+     Coluna "auto" cresce ate o max-content dos filhos e estoura a largura.
+     Linha "auto" e pior e mais sutil: o poster e um <img height:100%> dentro
+     de linha auto, o que e circular, entao o browser usa a altura INTRINSECA
+     da imagem. Numa tela 3440 de largura isso da 1927px de linha numa stage
+     de 1000px, e tudo que e centrado verticalmente cai fora do corte. So
+     aparece em telas largas e baixas (ultrawide), por isso passa despercebido. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  isolation: isolate;
+}
+
+.scrolly-stage > * { grid-area: stage; }
+
+/* ---------------- Video ---------------- */
+
+.scrolly-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* --blur e escrito pelo JS (0..6px). Sem blur no estado inicial. */
+  filter: blur(var(--blur, 0px));
+  will-change: filter;
+  z-index: var(--z-stage-media);
+}
+
+/* Poster segura o primeiro frame ate o video ter dados suficientes */
+.scrolly-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: var(--z-stage-poster);
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.scrolly.is-ready .scrolly-poster { opacity: 0; }
+
+/* ---------------- Scrims ---------------- */
+
+/* Veu claro: protege as duas zonas de texto do hero (topo e base) e deixa
+   a faixa central limpa, onde a concha e o assunto. Nao e um wash chapado:
+   e um respiro que devolve contraste onde o texto encosta na areia. */
+.scrolly-veil {
+  z-index: var(--z-stage-veil);
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--primitive-off) 62%, transparent) 0%,
+    color-mix(in srgb, var(--primitive-off) 34%, transparent) 34%,
+    transparent 58%
+  );
+}
+
+/* Scrim vinho: entra no fim do scrub pra legibilidade do bloco O problema.
+   --scrim e escrito pelo JS (0..0.58). */
+.scrolly-scrim {
+  z-index: var(--z-stage-scrim);
+  pointer-events: none;
+  background: var(--primitive-vinho);
+  opacity: var(--scrim, 0);
+}
+
+/* ---------------- Camadas de conteudo ---------------- */
+
+.stage-layer {
+  z-index: var(--z-stage-content);
+  position: relative;
+  display: grid;
+  align-content: center;
+  padding: 0 var(--space-section-x);
+  pointer-events: none;
+  /* Obrigatorio: sem esta linha os filhos herdam a cor JA COMPUTADA do body
+     (cafe) e o data-theme da camada nao chega no texto. Redefinir a custom
+     property nao reescreve uma cor que ja foi resolvida acima. */
+  color: var(--color-text);
+}
+
+.stage-layer > * { pointer-events: auto; }
+
+.stage-inner {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+/* Hero centrado: o frame e simetrico (concha no eixo, ceu aberto em cima),
+   entao o texto espelha o assunto em vez de brigar com ele. Centralizar aqui
+   e leitura de composicao, nao o default preguicoso que o DS proibe. */
+.layer-hero {
+  align-content: start;
+  justify-items: center;
+  text-align: center;
+  /* Ancorado na nav, nao na viewport. A versao anterior media a partir do
+     topo da concha (uma fracao da tela), o que fazia o bloco sentar em
+     alturas diferentes conforme a tela: colado na nav em 900px de altura,
+     28px de folga, e solto no meio do ceu em 1180px. Amarrado a nav, o
+     respiro sob a barra e sempre o mesmo e a composicao nao muda de leitura
+     entre um monitor e outro.
+
+     Sobra teto de sobra pra concha: a lead fecha por volta dos 38% e ela so
+     comeca aos 44%. */
+  padding-top: calc(var(--nav-h) + var(--space-9));
+}
+
+.hero-top {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.layer-hero .hero-copy {
+  /* Caixa baixa: a Space Grotesk ja tem desenho suficiente pra sustentar o
+     display sem o reforco da caixa alta, e em sentenca a frase le como fala,
+     nao como placa. Sai a escala reduzida de caps e volta a de overlay. */
+  font-size: var(--text-hero-overlay);
+  letter-spacing: var(--tracking-tight);
+  /* A quebra depois da virgula e explicita no HTML (<br>), nao mais fruto de
+     um max-width em ch calibrado na render. A medida em ch acertava a quebra
+     por consequencia: bastava trocar a fonte, o peso ou a escala pra ela
+     escorregar pra outra palavra. Com o <br> a quebra e o conteudo, entao
+     nao ha max-width aqui - a linha 1 define a largura do bloco. */
+  margin-inline: auto;
+}
+
+/* Sobre fotografia o texto de apoio usa a cor cheia, nao a secundaria:
+   os neutros de apoio foram calibrados pro fundo off chapado, nao pra areia. */
+.layer-hero .hero-lead {
+  max-width: 46ch;
+  margin-inline: auto;
+  color: var(--color-text);
+}
+
+/* Placa de anotacao: legenda tecnica sobre o desenho do golden ratio.
+   Bloco reto de vinho, como etiqueta de prancha de arquitetura.
+
+   Ancorada no MEIO, nao na base. Preso na base, a distancia ate a borda era
+   fixa (96px) enquanto a altura da tela variava, entao em telas grandes a
+   placa caia no canto e encostava no corte. No centro ela fica estavel em
+   qualquer altura de viewport e cai sobre a camara externa da concha, que e
+   a area mais limpa do frame. O padding-block e so uma trava de seguranca
+   pra nunca encostar nas bordas. */
+.layer-note {
+  align-content: center;
+  padding-block: var(--space-8);
+}
+
+.note-plate {
+  width: max-content;
+  max-width: min(38ch, 100%);
+  padding: var(--space-5) var(--space-6);
+  background: var(--primitive-vinho);
+  border-left: 2px solid var(--primitive-creme);
+}
+
+/* margin-top zerado: o espaco ate o kicker ja vem do margin-bottom padrao
+   dele (custom.css). Somando os dois, a placa abria 28px onde o resto da
+   pagina abre 16. */
+.note-plate p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+  color: var(--primitive-off);
+  max-width: none;
+}
+
+/* Blocos de texto da fase congelada. Todos ocupam a mesma area do grid, entao
+   trocam por cima do mesmo fundo sem empurrar layout. Centrados pra fechar o
+   arco no eixo em que o hero abriu. */
+.stage-beat {
+  justify-items: center;
+  text-align: center;
+  opacity: 0; /* o JS assume a partir daqui; evita flash no primeiro paint */
+}
+
+.stage-beat .stage-inner {
+  max-width: calc(var(--prose-max) + var(--space-9) * 2);
+  margin-inline: auto;
+}
+
+/* Os dois tempos tem comprimentos bem diferentes (39 e 81 caracteres), entao
+   uma medida fixa deixa um curto demais ou o outro com parede de 5 linhas.
+   `balance` distribui as linhas sozinho e mata as orfas; a medida vira so um
+   teto. Browser sem suporte quebra normal, sem prejuizo. */
+.stage-beat .beat-title {
+  max-width: 26ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.stage-beat .beat-text {
+  max-width: 46ch;
+  margin-top: var(--space-6);
+  margin-inline: auto;
+  text-wrap: pretty;
+}
+
+/* ---------------- Indicador de scroll ---------------- */
+
+/* Fica na direita pra nao disputar espaco com o lead e o CTA, que
+   ocupam a base esquerda. */
+/* Centrado no eixo da concha, nao no canto: o frame e simetrico e o hero
+   tambem, entao o hint no canto direito era o unico elemento fora do eixo.
+   No centro ele fecha a coluna vertical (titulo -> lead -> concha -> hint)
+   e o trilho aponta pro gesto em vez de decorar a margem. */
+.scroll-hint {
+  position: absolute;
+  z-index: var(--z-stage-hint);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--space-7);
+  display: inline-flex;
+  /* Empilhado: com o hint no eixo, o trilho vertical fica ABAIXO do rotulo e
+     continua o movimento pra baixo. Deitado ao lado, ele cortava o eixo.
+     column-reverse porque no DOM o trilho vem antes do texto. */
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.scroll-hint-rail {
+  display: block;
+  width: 1px;
+  height: var(--space-7);
+  background: linear-gradient(var(--color-text), transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-hint-rail::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 40%;
+  background: var(--color-text);
+  animation: railDrift var(--duration-ambient) var(--ease-in-out) infinite;
+}
+
+@keyframes railDrift {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  35%  { opacity: 1; }
+  100% { transform: translateY(250%); opacity: 0; }
+}
+
+/* ---------------- Nav sobre o palco ---------------- */
+
+/* A nav virou barra flutuante com substrato claro proprio, entao ela nao
+   depende mais do frame do video pra ter contraste. O JS continua trocando
+   o data-theme do #siteNav (nav.js e hero-scroll.js compartilham esse
+   comportamento com o index.html), mas a barra ignora a inversao via
+   .theme-light no filho.
+
+   A regra que pintava a logo de creme sobre fundo escuro saiu daqui: com a
+   barra sempre clara, ela deixaria a logo creme sobre creme. A cor base
+   (--primitive-cafe, em custom.css) ja serve os dois casos agora. */
+
+/* ---------------- Banda de continuidade ---------------- */
+
+/* O video termina no vinho da marca, entao a banda seguinte emenda sem costura. */
+.problema-tail { border-top: 0; }
+
+
+/* ---------------- Fallback estatico ----------------
+   prefers-reduced-motion ou browser sem suporte a scrub:
+   as camadas viram blocos empilhados normais, sem sticky e sem video. */
+
+.scrolly.is-static { --track: auto; }
+.scrolly.is-static .scrolly-track { height: auto; }
+
+.scrolly.is-static .scrolly-stage {
+  position: static;
+  height: auto;
+  display: block;
+}
+
+.scrolly.is-static .scrolly-video,
+.scrolly.is-static .scrolly-scrim,
+.scrolly.is-static .scroll-hint { display: none; }
+
+.scrolly.is-static .scrolly-poster {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 1;
+  z-index: var(--z-stage-media);
+}
+
+.scrolly.is-static .scrolly-veil { z-index: var(--z-stage-poster); }
+
+.scrolly.is-static .stage-layer {
+  opacity: 1 !important;
+  transform: none !important;
+  min-height: auto;
+  padding-block: var(--space-section-y);
+}
+
+.scrolly.is-static .layer-hero {
+  position: relative;
+  min-height: 82vh;
+  align-content: center;
+  /* No modo estatico o respiro nao vem mais do space-between */
+  gap: var(--space-7);
+}
+
+.scrolly.is-static .layer-note,
+.scrolly.is-static .stage-beat {
+  position: relative;
+  background: var(--primitive-vinho);
+  align-content: start;
+}
+
+/* Sem scrub os tempos viram blocos empilhados, um depois do outro */
+.scrolly.is-static .stage-beat + .stage-beat { padding-top: 0; }
+
+.scrolly.is-static .layer-note { padding-bottom: var(--space-section-y); }
+.scrolly.is-static .note-plate { border-left: 0; padding-inline: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-rail::after { animation: none; opacity: .6; transform: none; }
+}
+
+/* ---------------- Responsivo ---------------- */
+
+@media (max-width: 768px) {
+  /* Track menor no mobile: o gesto de rolagem cobre mais tela por vez */
+  .scrolly { --track: 620vh; }
+
+  /* No mobile o texto ocupa quase toda a largura, entao a janela limpa
+     do veu fica so na faixa da concha. Fora dela, protege. */
+  .scrolly-veil {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--primitive-off) 82%, transparent) 0%,
+      color-mix(in srgb, var(--primitive-off) 38%, transparent) 24%,
+      transparent 40%,
+      transparent 50%,
+      color-mix(in srgb, var(--primitive-off) 56%, transparent) 70%,
+      color-mix(in srgb, var(--primitive-off) 88%, transparent) 100%
+    );
+  }
+
+  /* No mobile a concha sobe mais cedo no frame, entao o deslocamento do
+     desktop nao cabe: aqui o texto desce so o suficiente pra sair da nav. */
+  .layer-hero { padding-top: clamp(var(--space-9), 18vh, 180px); }
+  /* No mobile a quebra em duas linhas nao cabe: "Sua marca merece
+     arquitetura," sozinha ja estoura a largura da tela. Desliga o <br> e
+     devolve a quebra pro fluxo, com medida em ch segurando o ritmo. */
+  .layer-hero .hero-copy br { display: none; }
+  .layer-hero .hero-copy { max-width: 18ch; }
+  .layer-hero .hero-lead { max-width: none; }
+
+  /* Sem hint no mobile: o CTA ja esta na dobra e o gesto e instintivo */
+  .scroll-hint { display: none; }
+
+  .note-plate { max-width: 100%; }
+}

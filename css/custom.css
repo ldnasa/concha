@@ -1,0 +1,1334 @@
+/* ============================================================
+   Concha - custom.css
+   Apenas o que utilities do Tailwind nao expressam.
+   Todo valor visual referencia design_system/tokens.css.
+   Padroes documentados em design_system/specs/.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+::selection {
+  background: var(--primitive-vinho);
+  color: var(--primitive-off);
+}
+
+img { max-width: 100%; display: block; }
+
+/* ---------------- Bandas de secao (specs/organisms/section-band.md) ---------------- */
+
+.band {
+  padding: var(--space-section-y) var(--space-section-x);
+  background: var(--color-bg);
+  color: var(--color-text);
+  position: relative;
+}
+
+.band-surface { background: var(--color-surface); }
+.band-hairline-top { border-top: 1px solid var(--color-border-subtle); }
+
+.band-inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+/* Faixa xadrez: divisoria fina, max 2 na pagina */
+.checker-strip {
+  height: var(--space-6);
+  background: conic-gradient(from 90deg at 50% 50%, var(--surface-checker-a) 0 25%, var(--surface-checker-b) 0 50%, var(--surface-checker-a) 0 75%, var(--surface-checker-b) 0);
+  background-size: var(--space-6) var(--space-6);
+}
+
+/* ---------------- Tipografia ---------------- */
+
+/* O espaco sob o kicker mora AQUI, nao em style inline de cada secao. Antes
+   cada uso escolhia o seu (space-5 no hero e nas bandas, space-6 no
+   manifesto, o row-gap do grid na rede), e o mesmo par kicker+titulo abria
+   distancias diferentes pagina afora. Um valor so, e o par le como um bloco.
+
+   inline-block, nao block: o hero centraliza o kicker por text-align, e um
+   bloco de largura total ignoraria isso. */
+.kicker {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.display-hero {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-hero);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+
+.display-h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-h2);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+
+/* Nunca uma palavra sozinha no fim do paragrafo. text-wrap:pretty manda o
+   browser evitar orfas, redistribuindo as ultimas linhas. Fica no seletor de
+   paragrafo, nao em cada caso: viuva e um defeito de composicao, e caçar uma
+   a uma com &nbsp; so conserta a largura de tela em que foi vista.
+   Nos titulos nao entra: la a quebra e decidida a mao, com <br>. */
+.lead,
+.editorial,
+p {
+  text-wrap: pretty;
+}
+
+.lead {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-light);
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.editorial {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+}
+
+/* Enfase inline (specs/foundations/typography.md): keyword Medium dentro de Light */
+.editorial strong, .lead strong {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.step-number {
+  font-family: var(--font-display);
+  font-weight: var(--weight-light);
+  font-size: var(--text-h2);
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+/* ---------------- Botoes (specs/atoms/button.md) ---------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-control-gap);
+  min-height: var(--space-7);
+  padding: 0 var(--space-control-x);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out), background var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(-1px) scale(0.99); }
+
+.btn:focus-visible,
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: var(--weight-semibold);
+  box-shadow: var(--shadow-vinho);
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-text);
+  background: var(--color-surface-elevated);
+}
+
+.btn-lg {
+  min-height: var(--space-8);
+  padding: 0 var(--space-6);
+  font-size: var(--text-body);
+}
+
+.icon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+
+.icon-md { width: var(--icon-md); height: var(--icon-md); }
+.icon-lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+/* Glifos de marca (WhatsApp) sao desenhados como area preenchida, nao como
+   traço. Sem isto o .icon acima os apaga: fill:none deixaria a forma vazia e
+   stroke:currentColor contornaria o contorno da silhueta. */
+.icon-brand { fill: currentColor; stroke: none; }
+
+/* ---------------- Nav (specs/organisms/navigation.md) ---------------- */
+
+/* O header vira so o trilho de posicionamento: quem tem superficie e a
+   .nav-bar dentro dele. Sem fundo aqui, a faixa vazia em volta da barra
+   nao pode interceptar clique do conteudo que passa por baixo. */
+.site-nav {
+  position: fixed;
+  top: var(--nav-inset);
+  left: 0; right: 0;
+  z-index: var(--z-nav);
+  padding-inline: var(--space-5);
+  pointer-events: none;
+}
+
+.site-nav > * { pointer-events: auto; }
+
+/* Grid de 3 colunas, nao flex com space-between: com space-between os links
+   ficam centrados APENAS se a logo e o CTA tiverem a mesma largura, o que
+   nunca acontece (o CTA e bem mais largo). O grid 1fr auto 1fr da a coluna
+   do meio o centro real da barra e joga as laterais pras extremidades,
+   entao a nav fica no mesmo eixo do hero, que e centrado. */
+.nav-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-6);
+  max-width: var(--content-max);
+  margin-inline: auto;
+  /* Compacta: padding-block menor que o resto da pagina. O horizontal cai
+     de --space-section-x pra --space-5 porque a barra agora e um painel,
+     nao uma faixa de borda a borda: a margem da secao a deixaria oca. */
+  padding: var(--space-3) var(--space-5);
+
+  /* Estado inicial: sem superficie. No topo da pagina a barra pousa sobre o
+     ceu claro do primeiro frame, onde o texto ja tem contraste de sobra, e
+     um painel ali so competiria com o hero. A borda transparente (em vez de
+     border: 0) mantem a caixa do mesmo tamanho nos dois estados, senao a
+     barra pularia 2px ao ganhar superficie. */
+  background: transparent;
+  border: 1px solid transparent;
+  /* Unico caso que o DS abre pra --radius-lg: painel flutuante. */
+  border-radius: var(--radius-lg);
+  transition:
+    background var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    backdrop-filter var(--duration-base) var(--ease-out);
+}
+
+/* Superficie entra com o scroll. E isto que resolve a legibilidade: sem ela
+   o texto cai direto sobre foto e video e o contraste depende do frame. */
+.site-nav.is-scrolled .nav-bar {
+  background: color-mix(in srgb, var(--primitive-off) 72%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border-color: var(--color-border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+/* Sem backdrop-filter o fundo translucido vira so um veu fraco e o texto
+   volta a competir com a imagem. Sem suporte, a barra fica quase opaca. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-nav.is-scrolled .nav-bar { background: color-mix(in srgb, var(--primitive-off) 96%, transparent); }
+}
+
+/* Sem display aqui: quem liga/desliga e o par hidden/lg:flex do Tailwind.
+   Declarar display nesta regra criaria disputa de especificidade com .hidden
+   e o resultado dependeria da ordem de injecao do CDN. */
+.nav-links {
+  grid-column: 2;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+}
+
+/* Coluna 3 sempre presente: segura o CTA no desktop e o botao de menu no
+   mobile, sempre encostados na borda direita. */
+.nav-end {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-link {
+  font-size: var(--text-small);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.nav-link:hover, .nav-link.active { color: var(--color-accent); }
+
+.logo-concha { color: var(--primitive-cafe); display: block; }
+.logo-concha svg { display: block; height: var(--space-5); width: auto; }
+
+/* Painel mobile */
+/* Acompanha a barra flutuante: mesma largura, mesmo raio, descolado logo
+   abaixo dela em vez de grudado na borda da tela. */
+.mobile-panel {
+  display: none;
+  max-width: var(--content-max);
+  margin: var(--space-2) auto 0;
+  background: color-mix(in srgb, var(--primitive-off) 92%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.mobile-panel.is-open { display: block; }
+
+/* ---------------- Ecossistema / A rede (portado do index3) ----------------
+   O index3 tinha CSS proprio (--vinho, .shell). Aqui a secao foi traduzida
+   pros tokens do DS: mesma composicao, valores do design system. */
+
+.network { background: var(--primitive-vinho); }
+
+.network-heading {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  /* row-gap zerado de proposito: aqui o kicker e uma LINHA do grid, entao o
+     espaco ate o titulo vinha do gap e nao da margem do kicker. Com o gap
+     valendo, a rede abria bem mais que as outras secoes. Zerado, quem manda
+     e o margin-bottom padrao do .kicker, igual ao resto da pagina. */
+  column-gap: var(--space-6);
+  row-gap: 0;
+  align-items: end;
+}
+
+.network-heading .kicker { grid-column: 1 / -1; }
+/* Sem max-width: a quebra em duas linhas e explicita no HTML (<br>), como
+   no h1 do hero. Um teto em ch aqui brigaria com o <br> e devolveria a
+   terceira linha em larguras intermediarias. */
+.network-heading .display-h2 { grid-column: 1 / span 7; }
+
+.network-heading .lead {
+  grid-column: 9 / -1;
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Grade da rede: duas colunas de nos com o simbolo no meio. O simbolo ocupa
+   a coluna central inteira porque ele e o argumento da secao: tudo passa
+   pela direcao criativa. */
+.network-map {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  margin-top: var(--space-9);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.network-side { display: grid; }
+
+.network-core {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  padding: var(--space-8) var(--space-7);
+  border-inline: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+  text-align: center;
+}
+
+.network-core svg { width: min(60%, 9rem); color: var(--primitive-creme); }
+
+.network-core p {
+  max-width: 22ch;
+  margin: var(--space-6) 0 0;
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-normal);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* O no e um <button>, nao um <article>: ele abre o modal do parceiro, entao
+   precisa ser operavel por teclado e anunciado como acionavel. */
+.network-node {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  width: 100%;
+  min-height: 9rem;
+  padding: var(--space-6) var(--space-7);
+  border: 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
+}
+
+.network-node:hover,
+.network-node:focus-visible {
+  background: var(--primitive-off);
+  color: var(--primitive-vinho);
+}
+
+.node-index {
+  font-family: var(--font-display);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-wide);
+  opacity: 0.55;
+}
+
+/* display:block e obrigatorio nos dois: dentro do <button> eles sao <span>,
+   que e inline por padrao, entao nome e especialidade corriam na mesma linha
+   e embolavam. Eram <h3>/<p> (blocos) antes do no virar botao. */
+.node-name {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+}
+
+.node-area {
+  display: block;
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-small);
+  opacity: 0.62;
+}
+
+/* Affordance do no: o "+" so aparece no hover/foco e revela que o item abre
+   algo. margin-left:auto encosta ele na borda direita da linha. */
+.node-plus {
+  flex: none;
+  margin-left: auto;
+  opacity: 0;
+  transform: rotate(-45deg);
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+
+/* :focus-visible junto do :hover pra quem navega por teclado receber a mesma
+   dica que o mouse recebe. */
+.network-node:hover .node-plus,
+.network-node:focus-visible .node-plus {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node-plus { transition: none; transform: none; }
+}
+
+/* ---------------- Projetos (portado do index3) ----------------
+   Intro fixa a esquerda enquanto a grade rola: a secao tem 6 cases e o
+   contexto some se o titulo rolar junto. */
+
+.projects-layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-8);
+}
+
+.projects-intro {
+  grid-column: 1 / span 4;
+  align-self: start;
+  position: sticky;
+  /* --nav-h ja inclui o quanto a barra flutuante descola do topo. */
+  top: calc(var(--nav-h) + var(--space-6));
+}
+
+.project-grid {
+  display: grid;
+  grid-column: 6 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--space-7), 6vw, var(--space-9)) var(--space-6);
+}
+
+/* Desencontro vertical: a coluna par desce e a grade deixa de ler como
+   tabela. So no desktop; empilhado no mobile o deslocamento viraria buraco. */
+.project:nth-child(even) { transform: translateY(var(--space-9)); }
+
+.project { margin: 0; }
+
+.project-media {
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--primitive-creme);
+}
+
+.project-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.project:hover .project-media img { transform: scale(1.035); }
+
+.project-caption {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.project-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h4);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Link esticado: o <button> e o controle semantico (nome do projeto como
+   rotulo acessivel) e o ::after cobre o card inteiro pra area de clique ser
+   a card toda. O card nao pode ser <button> porque o conteudo dele nao e
+   phrasing content, e div/figure dentro de button e markup invalido. */
+.project { position: relative; margin: 0; }
+
+.project-open {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.project-open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* O foco tem que aparecer no card, nao so no texto do titulo. */
+.project-open:focus-visible { outline: none; }
+.project:has(.project-open:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.project-area {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
+}
+
+.project-index {
+  font-family: var(--font-display);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 900px) {
+  .projects-layout { grid-template-columns: 1fr; }
+  .projects-intro { grid-column: 1 / -1; position: static; }
+  .project-grid { grid-column: 1 / -1; }
+}
+
+@media (max-width: 640px) {
+  .project-grid { grid-template-columns: 1fr; }
+  .project:nth-child(even) { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-media img { transition: none; }
+  .project:hover .project-media img { transform: none; }
+}
+
+/* ---------------- Direção / retrato da Vanessa ----------------
+   Retrato real e regra dura do DS: nunca stock, nunca IA. */
+
+/* Ancora do selo. Sem overflow:hidden aqui de proposito: quem recorta a foto
+   e a .vanessa-portrait dentro dele. */
+.vanessa-media { position: relative; }
+
+.vanessa-portrait {
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* A foto e quadrada (900x900) e o slot e 4:5, entao cover recorta as
+   laterais. object-position no topo pra manter o rosto no enquadramento:
+   o corte centralizado comeria a testa. */
+.vanessa-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+
+/* ---- Selo rotativo ----
+   Vaza pela borda esquerda da foto: translateX(-50%) deixa metade dele sobre
+   a foto e metade sobre a banda. Disco claro solido porque ele cruza dois
+   fundos (foto clara e banda cafe) e nao pode depender de nenhum dos dois
+   pra ter contraste. */
+.seal {
+  position: absolute;
+  top: 18%;
+  left: 0;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: var(--seal-size, 152px);
+  height: var(--seal-size, 152px);
+  border-radius: var(--radius-pill);
+  background: var(--primitive-off);
+  color: var(--primitive-cafe);
+  box-shadow: var(--shadow-card);
+}
+
+.seal > * { grid-area: 1 / 1; }
+
+/* Só o anel gira. O simbolo no centro fica parado: girando junto, a espiral
+   viraria um cata-vento e perderia a leitura de concha. */
+.seal-ring {
+  width: 100%;
+  height: 100%;
+  animation: selo-girar 22s linear infinite;
+}
+
+.seal-ring text {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  fill: currentColor;
+}
+
+.seal-symbol {
+  width: 38%;
+  height: auto;
+  color: var(--primitive-vinho);
+}
+
+@keyframes selo-girar {
+  to { transform: rotate(360deg); }
+}
+
+/* Movimento continuo e exatamente o que reduced-motion pede pra desligar. */
+@media (prefers-reduced-motion: reduce) {
+  .seal-ring { animation: none; }
+}
+
+/* Abaixo de lg a coluna da foto vira largura cheia e encosta na margem da
+   secao, entao nao sobra espaco pro selo transbordar: metade dele saia da
+   VIEWPORT e era cortada pela borda esquerda. Aqui ele passa pra dentro da
+   foto, no canto inferior esquerdo, longe do rosto.
+
+   Só o disco muda de tamanho: o font-size fica em unidades do viewBox e
+   acompanha a escala do SVG sozinho; reduzir aqui encolheria duas vezes. */
+@media (max-width: 1024px) {
+  .seal {
+    --seal-size: 128px;
+    top: auto;
+    bottom: var(--space-5);
+    left: var(--space-5);
+    transform: none;
+  }
+}
+
+/* ---------------- Rodapé ----------------
+   Traduzido do frame "footer" (24:14) do Figma, 1440x852. As medidas vieram
+   do arquivo, nao de estimativa: coluna de 1168, imagem de 299, wordmark de
+   251, gaps de 31 e 24.
+
+   O padding usa --space-section-x em vez de 136px cravado: em 1440 o token
+   resolve pra 79px, sobra 1282 de area util, e o max-width de 1168 centraliza
+   sozinho deixando exatamente os 136px de margem do design. Assim bate
+   pixel a pixel na largura de referencia e ainda encolhe nas menores. */
+.site-footer {
+  background: var(--color-bg);
+  color: var(--color-text);
+  /* 67.5 = (852 - 717) / 2, a coluna e centrada na vertical do frame */
+  padding: 67.5px var(--space-section-x);
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 31px;
+  max-width: 1168px;
+  margin-inline: auto;
+}
+
+/* No Figma sao dois frames aninhados (cabecalho+imagem, depois a barra), mas
+   os dois gaps sao 24, entao uma pilha unica da o mesmo resultado com menos
+   um nivel de markup. */
+.footer-top {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.footer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  min-height: 40px;
+}
+
+/* O .kicker global tem margin-bottom pro par kicker+titulo; aqui ele e um
+   item de linha e a margem desalinharia a centralizacao vertical. */
+.footer-slogan { margin-bottom: 0; }
+
+.footer-social { display: flex; gap: 11px; }
+
+.social-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--primitive-creme) 24%, transparent);
+  color: var(--color-text-secondary);
+  transition: border-color var(--duration-base) var(--ease-out), background var(--duration-base) var(--ease-out);
+}
+
+.social-btn:hover {
+  border-color: var(--color-text-secondary);
+  background: color-mix(in srgb, var(--primitive-creme) 10%, transparent);
+}
+
+.footer-media {
+  margin: 0;
+  height: 299px;
+  overflow: hidden;
+}
+
+/* A foto e retrato (898x1176) e a faixa e larguissima (1168x299), entao o
+   cover corta bastante. O eixo Y desce pra concha ficar no centro da faixa;
+   centrado, o corte pegaria so a parede acima dela. */
+/* 65% no eixo Y calibrado na medida, nao no olho: a foto tem 896x1152 e o
+   cover escala por largura (1,304x), deixando 1203px de sobra vertical.
+   65% desse corte abre a janela em 52%-72% da foto original, que e
+   exatamente a extensao da concha no enquadramento. Centrado (50%) a
+   janela subia e cortava a base dela. */
+.footer-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 65%;
+}
+
+.footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.footer-agencia { display: block; }
+
+/* 89x24 travados, como no Figma. O SVG tem proporcao 138x38 (=3,63) e o
+   arquivo usa 3,71, entao ha ~2% de achatamento; e o que o design define. */
+.footer-agencia img { width: 89px; height: 24px; }
+
+/* Assinatura: o wordmark ocupa a coluna inteira. height:auto preserva a
+   proporcao do viewBox (295x63) e cai em ~249px, contra os 251 do Figma;
+   forcar 251 exigiria distorcer 0,6% da forma da marca. */
+.footer-wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--primitive-creme-claro);
+}
+
+/* ---- Atalho de volta ao topo ----
+   Mesma linguagem dos botoes sociais do rodape (caixa reta, borda de creme a
+   24%), so que maior: e alvo de toque flutuante, entao respeita os 48px. */
+.back-to-top {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: var(--z-nav);
+  display: grid;
+  place-items: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  border: 1px solid color-mix(in srgb, var(--primitive-creme) 24%, transparent);
+  background: color-mix(in srgb, var(--primitive-cafe) 82%, transparent);
+  backdrop-filter: blur(8px);
+  color: var(--primitive-creme-claro);
+
+  /* visibility (e nao so opacity) porque um controle invisivel que continua
+     no fluxo de foco e uma armadilha de teclado: o usuario tabula pra um
+     botao que ele nao ve. visibility:hidden o tira da ordem de tabulacao. */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out),
+    visibility 0s linear var(--duration-base),
+    border-color var(--duration-base) var(--ease-out);
+}
+
+.back-to-top.is-visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  /* Na entrada a visibility tem que valer na hora, sem o atraso da saida. */
+  transition-delay: 0s;
+}
+
+.back-to-top:hover {
+  border-color: var(--primitive-creme-claro);
+  background: color-mix(in srgb, var(--primitive-cafe) 94%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top { transform: none; transition: opacity var(--duration-base) linear; }
+  /* Rolagem suave e movimento: com reduced-motion o salto e instantaneo. */
+  html { scroll-behavior: auto; }
+}
+
+@media (max-width: 900px) {
+  .site-footer { padding-block: var(--space-9); }
+  .footer-inner { gap: var(--space-6); }
+  .footer-media { height: 220px; }
+}
+
+@media (max-width: 560px) {
+  .footer-head { flex-direction: column; align-items: flex-start; gap: var(--space-5); }
+  .footer-bar { flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+  .footer-media { height: 180px; }
+}
+
+/* ---------------- Lightbox do case ----------------
+   Cabecalho ancorado no topo e faixa de imagens rolando na horizontal por
+   baixo. Quase tela cheia: o assunto aqui e a imagem. */
+
+.case-dialog {
+  width: min(84rem, calc(100vw - var(--space-5) * 2));
+  max-width: none;
+  height: min(52rem, calc(100vh - var(--space-5) * 2));
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  background: var(--primitive-off);
+  color: var(--primitive-cafe);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.case-dialog::backdrop {
+  background: color-mix(in srgb, var(--primitive-cafe) 78%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+/* auto 1fr: o cabecalho ocupa o que precisar e a faixa fica com o resto da
+   altura. Com 1fr a faixa tem altura definida, que e o que permite a imagem
+   preencher 100% sem estourar o dialog. */
+.case-shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+}
+
+.case-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-7);
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: var(--primitive-off);
+}
+
+.case-head-copy { max-width: 60ch; }
+.case-head .display-h2 { font-size: var(--text-h3); }
+.case-head .lead { margin: var(--space-3) 0 0; }
+/* .case-head na frente por especificidade (0,2,0), nao por ordem: o botao
+   carrega tambem a classe .partner-close, que e position:absolute, e aquele
+   bloco vem DEPOIS neste arquivo. Empatando em (0,1,0) o absolute vencia, o
+   botao saia do fluxo do grid e as setas subiam pro lugar dele. */
+.case-head .case-close { position: static; flex: none; }
+
+/* Fechar em cima, setas embaixo, tudo alinhado a direita. */
+.case-actions {
+  display: grid;
+  justify-items: end;
+  gap: var(--space-4);
+  flex: none;
+}
+
+.case-arrows { display: flex; gap: var(--space-2); }
+
+.case-arrow {
+  display: grid;
+  place-items: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--primitive-off);
+  color: var(--primitive-cafe);
+  cursor: pointer;
+  transition: border-color var(--duration-base) var(--ease-out), background var(--duration-base) var(--ease-out), opacity var(--duration-base) var(--ease-out);
+}
+
+.case-arrow:hover:not(:disabled) {
+  border-color: var(--color-text);
+  background: var(--primitive-creme);
+}
+
+/* Nas pontas a seta apaga em vez de sumir: se ela sumisse, as duas outras
+   trocariam de lugar e o alvo de clique se mexeria embaixo do cursor. */
+.case-arrow:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+/* Faixa horizontal. grid-auto-flow:column impede que os slides quebrem
+   linha; a largura de cada um vem de grid-auto-columns. */
+.case-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(46rem, 82%);
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-7);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Sem scroll-snap de proposito. Escrever scrollLeft por script SEMPRE
+     re-encaixa no ponto mais proximo, com mandatory ou proximity: medido
+     aqui, 120px voltava pra 0 e 500px pulava pra 760. Como a roda do mouse
+     e implementada em JS (mouse comum so emite deltaY, entao a faixa nao
+     receberia nada sem isso), o snap anulava cada clique de roda.
+     O alinhamento que o snap daria vem das setas, que calculam o indice do
+     slide e vao exatamente pra borda dele. */
+  scroll-padding-inline: var(--space-7);
+  overscroll-behavior-x: contain;
+}
+
+.case-strip:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -4px;
+}
+
+.case-slide {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  overflow: hidden;
+  background: var(--primitive-creme);
+}
+
+.case-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Placeholder: mesma linguagem do modal de parceiro (tracejado + rotulo),
+   pra ninguem confundir com decisao final de design. */
+.case-slide.is-empty {
+  border: 1px dashed var(--color-border-strong);
+}
+
+.case-slide.is-empty::after {
+  content: attr(data-rotulo);
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .case-dialog {
+    width: calc(100vw - var(--space-4) * 2);
+    height: calc(100vh - var(--space-4) * 2);
+  }
+  .case-head { padding: var(--space-5); }
+  .case-strip {
+    grid-auto-columns: 88%;
+    padding: var(--space-5);
+    scroll-padding-inline: var(--space-5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-strip { scroll-behavior: auto; }
+}
+
+/* ---------------- Modal do parceiro ----------------
+   <dialog> nativo: foco preso, Esc pra fechar e inert no resto da pagina
+   vem do browser, sem reimplementar acessibilidade em JS. */
+.partner-dialog {
+  width: min(46rem, calc(100vw - var(--space-6) * 2));
+  padding: 0;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  background: var(--primitive-off);
+  color: var(--primitive-cafe);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.partner-dialog::backdrop {
+  background: color-mix(in srgb, var(--primitive-cafe) 62%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+/* Foto a esquerda, conteudo a direita. A coluna da foto e a menor das duas:
+   ela ancora, o texto e o assunto. */
+/* minmax(0, ...) e obrigatorio nas duas colunas. Com "5fr 7fr" puro, o
+   minimo automatico da faixa e o min-content do item, e o aspect-ratio da
+   foto deriva uma largura minima a partir da altura da linha (477px de
+   altura / 3:4 = 358px). Esse minimo passava por cima da fatia de 5fr e as
+   colunas saiam quase iguais. Com minimo zerado, a proporcao 5:7 vale. */
+.partner-dialog-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: stretch;
+}
+
+/* Slot da foto: proporcao fixa pro modal nao pular de altura quando a imagem
+   real entrar no lugar do placeholder. */
+.partner-photo {
+  position: relative;
+  /* width:100% torna a largura definida. Sem isso a largura fica "auto" e o
+     aspect-ratio a deriva da altura esticada da linha (456 x 3/4 = 342px),
+     estourando a coluna de 306px. Com largura definida e altura vinda do
+     stretch, o aspect-ratio so entra como piso quando a linha e baixa. */
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: var(--primitive-creme);
+}
+
+.partner-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+.partner-body { padding: var(--space-6); }
+
+/* O titulo do modal usa a escala de h3, nao a de h2: 52px numa coluna de
+   ~370px domina o painel e briga com a leitura. O modal e informativo,
+   nao um pico da pagina. */
+.partner-body .display-h2 { font-size: var(--text-h3); }
+
+/* Slot da logo: altura travada pra logos de proporcoes diferentes pousarem
+   na mesma linha de base. */
+.partner-logo {
+  display: flex;
+  align-items: center;
+  height: var(--space-7);
+  margin-bottom: var(--space-5);
+}
+
+.partner-logo img { max-height: 100%; width: auto; object-fit: contain; }
+
+/* ---- Placeholders ----
+   Enquanto logo e foto reais nao chegam, os slots aparecem como caixa
+   tracejada rotulada em vez de sumirem. Some, o grid ficava com metade
+   vazia e o modal lia como quebrado. Tracejado e proposital: sinaliza
+   "provisorio" a quem abre, e nao passa por decisao de design final. */
+.partner-photo.is-empty,
+.partner-logo.is-empty {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--color-border-strong);
+  background: var(--primitive-creme);
+}
+
+.partner-photo.is-empty::after,
+.partner-logo.is-empty::after {
+  content: attr(data-rotulo);
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* O <img> sem src viraria um icone de imagem quebrada dentro do placeholder. */
+.partner-photo.is-empty img,
+.partner-logo.is-empty img { display: none; }
+
+.partner-logo.is-empty { width: 8rem; }
+
+.partner-deliverables {
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.partner-deliverables li {
+  display: flex;
+  gap: var(--space-3);
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
+}
+
+.partner-deliverables li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 0.55em;
+  background: var(--primitive-vinho);
+}
+
+.partner-close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  display: grid;
+  place-items: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--primitive-off);
+  color: var(--primitive-cafe);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .network-heading { grid-template-columns: 1fr; }
+  .network-heading .display-h2,
+  .network-heading .lead { grid-column: 1 / -1; max-width: none; }
+  /* Mesma logica do h1 do hero: a quebra manual foi calibrada pra largura de
+     desktop. No mobile ela soma com a quebra natural e estica o titulo pra
+     quatro linhas, entao o <br> sai e o fluxo decide. */
+  .network-heading .display-h2 br { display: none; }
+  .network-map { grid-template-columns: 1fr; }
+  .network-core { grid-row: 1; border-inline: 0; }
+  .network-node { padding-inline: var(--space-5); }
+  .partner-dialog-grid { grid-template-columns: 1fr; }
+  .partner-photo { aspect-ratio: 16 / 10; }
+}
+
+/* ---------------- Tags da rede (specs/molecules/card.md) ---------------- */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--space-7);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-default);
+  font-size: var(--text-small);
+  color: var(--color-text);
+  background: var(--color-surface-elevated);
+}
+
+.tag .tag-parceiro {
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ---------------- Cards de case (specs/molecules/card.md) ---------------- */
+
+.case-card {
+  display: block;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-none);
+  background: var(--color-surface-elevated);
+  overflow: hidden;
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+
+.case-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.case-media {
+  position: relative;
+  background: var(--color-surface);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.case-media.ratio-45 { aspect-ratio: 4 / 5; }
+.case-media.ratio-11 { aspect-ratio: 1 / 1; }
+
+.case-media .symbol-mark {
+  width: var(--space-9);
+  height: auto;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+/* ---------------- FAQ accordion (specs/molecules/accordion.md) ---------------- */
+
+.faq-item { border-top: 1px solid var(--color-border-default); }
+.faq-item:last-child { border-bottom: 1px solid var(--color-border-default); }
+
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) 0;
+  background: none;
+  border: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-h4);
+  font-weight: var(--weight-regular);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-q .icon {
+  color: var(--color-accent);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.faq-item.is-open .faq-q .icon { transform: rotate(45deg); }
+
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-base) var(--ease-out);
+}
+
+.faq-item.is-open .faq-a { grid-template-rows: 1fr; }
+
+.faq-a > div { overflow: hidden; }
+
+.faq-a p {
+  margin: 0;
+  padding: 0 0 var(--space-5);
+  color: var(--color-text-secondary);
+  max-width: var(--prose-max);
+}
+
+/* ---------------- CTA final: textura vinho (AI Gen prompt 2) ---------------- */
+
+.cta-band {
+  background-color: var(--primitive-vinho);
+  background-image: linear-gradient(color-mix(in srgb, var(--primitive-vinho) 72%, transparent), color-mix(in srgb, var(--primitive-vinho) 72%, transparent)), url("../assets/images/cta-texture.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* ---------------- Simbolo fibonacci como watermark ---------------- */
+
+.symbol-watermark {
+  position: absolute;
+  pointer-events: none;
+  color: var(--color-text);
+  opacity: 0.08;
+}
+
+.symbol-watermark-manifesto {
+  /* token-audit-disable-next-line: dimensionamento responsivo do watermark, decisao de composicao */
+  width: clamp(180px, 24vw, 340px);
+  height: auto;
+  right: calc(var(--space-6) * -1);
+  bottom: calc(var(--space-6) * -1);
+}
+
+.footer-logo {
+  /* token-audit-disable-next-line: largura maxima do wordmark no rodape, decisao de composicao */
+  width: min(100%, 340px);
+  height: auto;
+  color: var(--primitive-creme-claro);
+}
+
+/* ---------------- Reveals (specs/foundations/motion.md) ---------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--space-4));
+  transition: opacity var(--duration-medium) var(--ease-out), transform var(--duration-medium) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* Assinatura de reverberacao: stagger que desacelera (so no manifesto) */
+.echo-1 { --reveal-delay: 0ms; }
+.echo-2 { --reveal-delay: 120ms; }
+.echo-3 { --reveal-delay: 280ms; }
+.echo-4 { --reveal-delay: 500ms; }
+.echo-5 { --reveal-delay: 780ms; }
+
+/* Stagger linear padrao pra grids */
+.stagger-1 { --reveal-delay: 0ms; }
+.stagger-2 { --reveal-delay: 90ms; }
+.stagger-3 { --reveal-delay: 180ms; }
+.stagger-4 { --reveal-delay: 270ms; }
+.stagger-5 { --reveal-delay: 360ms; }
+.stagger-6 { --reveal-delay: 450ms; }
+
+/* Hero word-reveal (uma vez, so no H1) */
+.hero-title .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(var(--space-5));
+  animation: heroWordReveal var(--duration-slow) var(--ease-out) forwards;
+}
+
+@keyframes heroWordReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------- Reduced motion ---------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .hero-title .word { opacity: 1; transform: none; animation: none; }
+  .faq-a { transition: none; }
+  .btn, .case-card { transition: none; }
+}

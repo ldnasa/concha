@@ -1,0 +1,46 @@
+# ===============================================================
+# Repo de PREVIEW: so o que a pagina precisa pra ser servida.
+# O repositorio ldnasa/concha e publico e este deploy e um link
+# temporario de aprovacao com o cliente.
+# ===============================================================
+
+# --- Material de origem do cliente (confidencial) ---
+# Manual de marca, codigo genetico, proposta comercial, dados dos
+# parceiros. Nada disso e consumido pelo site.
+marca/
+refs/
+*.pdf
+*.docx
+*.xlsx
+
+# --- Documentacao de trabalho ---
+# Briefing, estrutura, copy e instrucoes de agente. Nao vao pro ar
+# e descrevem estrategia do cliente.
+*.md
+
+# --- Design system: so o CSS que a pagina carrega ---
+# Showcase, specs e scripts de auditoria sao ferramenta interna.
+design_system/*
+!design_system/tokens.css
+
+# --- Ferramentas locais ---
+.claude/
+wireframe.html
+js/main.js
+
+# --- Assets nao referenciados pela pagina ---
+assets/images/_hero-alt.jpg
+assets/images/architecture-echo-gpt.webp
+assets/images/photo-hero-first-frame.jpeg
+assets/video/video-hero.mp4
+assets/video/video-hero2.mp4
+assets/pattern/pattern.svg
+
+# --- Versoes anteriores e capturas ---
+_archive/
+screenshots/
+
+# --- Sistema ---
+node_modules/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,238 @@
+/* ============================================================
+   CONCHA DESIGN SYSTEM - tokens.css
+   Reverbero Editorial v1
+   Fonte de verdade de VALORES. Derivado de design_system/showcase.html.
+   Nunca hardcode um valor visual: use var(--...).
+   Camadas: 1) primitives  2) semantic aliases  3) component specs
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   LAYER 1 - PRIMITIVES (paleta oficial CONCHA_MARCA.pdf)
+   ------------------------------------------------------------ */
+:root {
+  /* Marca (fixos, independem de tema) */
+  --primitive-cafe: #2D2622;        /* Cafe - Pantone Black 4 C */
+  --primitive-creme: #D8D0C3;       /* Creme - Warm Gray 2 C */
+  --primitive-creme-claro: #E3DDD3; /* Creme do logo SVG */
+  --primitive-off: #F5F2EE;         /* Off - 7527 C */
+  --primitive-vinho: #311116;       /* Vinho Escuro - 4975 C */
+
+  /* Extensoes derivadas (surfaces e ramp neutra quente) */
+  --primitive-vinho-800: #3D1B21;
+  --primitive-vinho-700: #4A2229;
+  --primitive-off-claro: #FAF8F5;
+  --primitive-areia: #ECE6DD;
+  --primitive-neutral-700: #4A423C;
+  --primitive-neutral-500: #8A7F75;
+  --primitive-neutral-400: #A99E92;
+
+  /* Semantic states (uso raro, formularios) */
+  --primitive-terracota: #8A3B2E;   /* erro */
+  --primitive-oliva: #55603F;       /* sucesso */
+
+  /* ------------------------------------------------------------
+     TIPOGRAFIA - par de duas familias, com papeis separados.
+     Space Grotesk carrega as headlines: geometrica de base, mas com
+     cortes secos nos terminais que dao a ela o mesmo tom construido
+     do wordmark. Poppins segue em todo o resto (corpo, UI, labels),
+     entao o contraste e sempre display vs texto, nunca duas vozes
+     disputando o mesmo papel.
+     Mono aparece SO em superficie de codigo/token, nunca na landing.
+     ------------------------------------------------------------ */
+  --font-display: "Space Grotesk", "Poppins", "Century Gothic", sans-serif;
+  --font-ui: "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  --text-hero: clamp(40px, 7.2vw, 108px);
+  /* H1 sobre imagem: menor que o hero solto, porque a imagem ja carrega
+     presenca. Usado no scrollytell (index2), onde o titulo divide a tela
+     com a concha e nao pode invadir o assunto. */
+  --text-hero-overlay: clamp(34px, 5.6vw, 64px);
+  /* H1 em caixa alta: caixa alta ocupa mais largura e le maior que a mesma
+     medida em caixa baixa, entao a escala desce pra caber em 2 linhas. */
+  --text-hero-caps: clamp(28px, 4.2vw, 62px);
+  /* Teto abaixo do h1 (64px): em 66px o h2 ficava MAIOR que o h1 e invertia
+     a hierarquia. A distancia de ~12px mantem os dois niveis distinguiveis
+     sem precisar de outro peso ou caixa. */
+  --text-h2: clamp(32px, 4.2vw, 52px);
+  --text-h3: clamp(22px, 2.6vw, 32px);
+  --text-h4: 1.25rem;
+  --text-lead: clamp(17px, 1.5vw, 20px);
+  --text-body: 1rem;        /* 16px */
+  --text-small: 0.875rem;   /* 14px */
+  --text-meta: 0.71875rem;  /* 11.5px */
+
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --leading-tight: 1.04;    /* hero */
+  --leading-snug: 1.16;     /* h2/h3 */
+  --leading-normal: 1.6;    /* body */
+  --leading-relaxed: 1.75;  /* manifesto/long-form */
+
+  --tracking-tight: -0.025em;  /* display grande, eco do wordmark */
+  /* Caixa alta ja tem respiro entre as formas: o tracking fechado da caixa
+     baixa esmaga as letras. Fica quase neutro, so tirando o excesso. */
+  --tracking-caps: -0.008em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.14em;     /* eyebrows/labels uppercase (padrao do manual) */
+
+  /* ------------------------------------------------------------
+     ESPACO - base 8px, respiro editorial generoso
+     ------------------------------------------------------------ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Nav flutuante: a barra descola do topo em vez de encostar na borda.
+     Tres tokens porque cada um responde uma pergunta diferente:
+     - inset: quanto a barra descola do topo (e das laterais)
+     - bar-h: a altura da propria barra, derivada do padding-block mais o
+       item mais alto dela, que e o botao do CTA (48px = --space-7, o
+       minimo de alvo de toque; nao encolhe abaixo disso)
+     - nav-h: o espaco TOTAL que a nav ocupa a partir do topo da viewport.
+       E este que os consumidores usam pra se posicionar, sem precisar
+       saber que a barra flutua. */
+  --nav-inset: var(--space-4);
+  /* +2px: a barra tem borda de 1px em cima e embaixo, e com box-sizing
+     border-box em altura automatica a borda entra na altura final. */
+  --nav-bar-h: calc(var(--space-3) * 2 + var(--space-7) + 2px);
+  --nav-h: calc(var(--nav-inset) + var(--nav-bar-h));
+
+  --space-section-y: clamp(96px, 10vw, 152px);
+  --space-section-x: clamp(24px, 5.5vw, 88px);
+  --space-card-padding: var(--space-6);
+  --space-control-x: 22px;
+  --space-control-gap: 10px;
+  --content-max: 1240px;
+  --prose-max: 62ch;
+
+  /* ------------------------------------------------------------
+     FORMA - cantos de arquitetura: blocos retos, radius so em controle
+     ------------------------------------------------------------ */
+  --radius-none: 0;          /* blocos, imagens, secoes, cards editoriais */
+  --radius-sm: 2px;          /* chips discretos */
+  --radius-md: 6px;          /* botoes, inputs */
+  --radius-lg: 12px;         /* uso raro: paineis flutuantes */
+  --radius-pill: 999px;      /* tags da rede */
+
+  /* ------------------------------------------------------------
+     ELEVACAO - sombra tingida de cafe, nunca preto puro
+     ------------------------------------------------------------ */
+  --shadow-card: 0 24px 48px -28px rgba(45, 38, 34, 0.35);
+  --shadow-card-hover: 0 30px 56px -26px rgba(45, 38, 34, 0.45);
+  --shadow-vinho: 0 28px 56px -30px rgba(49, 17, 22, 0.55);
+
+  /* ------------------------------------------------------------
+     MOTION - reverbera: suave, com proposito, nunca decorativo
+     ------------------------------------------------------------ */
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-medium: 420ms;
+  --duration-slow: 640ms;
+  /* Loop ambiente (indicador de scroll). Classe a parte: nao e transicao
+     de estado, e sinalizacao continua. Unico caso permitido de repeticao. */
+  --duration-ambient: 2400ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ------------------------------------------------------------
+     ICONES - Lucide, stroke 1.75, herda currentColor
+     ------------------------------------------------------------ */
+  --icon-stroke: 1.75;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  /* Z-INDEX global */
+  --z-nav: 50;
+  --z-overlay: 90;
+  --z-toast: 99;
+
+  /* Empilhamento local do palco imersivo (dentro de isolation: isolate).
+     Nao concorre com a escala global: e a ordem de leitura das camadas
+     do scrollytell, de tras pra frente. */
+  --z-stage-media: 0;
+  --z-stage-poster: 1;
+  --z-stage-veil: 2;
+  --z-stage-scrim: 3;
+  --z-stage-content: 4;
+  --z-stage-hint: 5;
+}
+
+/* ------------------------------------------------------------
+   LAYER 2 - SEMANTIC ALIASES por tema
+   O SITE e light-first: :root SEM atributo = LIGHT (default real).
+   Dark (vinho) e escopado e aplicado pontualmente nas bandas de
+   pico. Cafe e a superficie escura NEUTRA (nao-pico), tambem
+   escopada. Audit Mike 2026-07-19, findings 1 e 5.
+   ------------------------------------------------------------ */
+:root,
+:root[data-theme="light"],
+.theme-light {
+  --color-bg: var(--primitive-off);
+  --color-surface: var(--primitive-areia);
+  --color-surface-elevated: var(--primitive-off-claro);
+  --color-text: var(--primitive-cafe);
+  --color-text-secondary: var(--primitive-neutral-700);
+  --color-text-muted: rgba(45, 38, 34, 0.58);
+  --color-accent: var(--primitive-vinho);        /* vinho e o pico */
+  --color-accent-contrast: var(--primitive-off);
+  --color-link: var(--primitive-vinho);
+  --color-border-subtle: rgba(45, 38, 34, 0.10);
+  --color-border-default: rgba(45, 38, 34, 0.16);
+  --color-border-strong: rgba(45, 38, 34, 0.28);
+  --color-error: var(--primitive-terracota);
+  --color-success: var(--primitive-oliva);
+  --surface-checker-a: var(--primitive-vinho);
+  --surface-checker-b: var(--primitive-creme);
+}
+
+/* Banda de pico (vinho): manifesto e CTA final. Max 2 por pagina. */
+:root[data-theme="dark"],
+.theme-dark,
+[data-theme="dark"] {
+  --color-bg: var(--primitive-vinho);
+  --color-surface: var(--primitive-vinho-800);
+  --color-surface-elevated: var(--primitive-vinho-700);
+  --color-text: var(--primitive-off);
+  --color-text-secondary: var(--primitive-creme-claro);
+  --color-text-muted: rgba(245, 242, 238, 0.56);
+  --color-accent: var(--primitive-creme);        /* sinal sobre vinho */
+  --color-accent-contrast: var(--primitive-vinho);
+  --color-link: var(--primitive-creme-claro);
+  --color-border-subtle: rgba(245, 242, 238, 0.10);
+  --color-border-default: rgba(245, 242, 238, 0.18);
+  --color-border-strong: rgba(245, 242, 238, 0.30);
+  --color-error: #C96A57;   /* terracota clareada p/ AA sobre vinho */
+  --color-success: #A8B18C; /* oliva clareada p/ AA sobre vinho */
+}
+
+/* Banda cafe: superficie escura NEUTRA (nao-pico). Respiro escuro
+   de miolo (direcao criativa ou rodape), max 1 no miolo. Nao gasta
+   o Von Restorff do vinho. */
+[data-theme="cafe"],
+.theme-cafe {
+  --color-bg: var(--primitive-cafe);
+  --color-surface: #3A322C;
+  --color-surface-elevated: var(--primitive-neutral-700);
+  --color-text: var(--primitive-off);
+  --color-text-secondary: var(--primitive-creme-claro);
+  --color-text-muted: rgba(245, 242, 238, 0.56);
+  --color-accent: var(--primitive-creme);
+  --color-accent-contrast: var(--primitive-cafe);
+  --color-link: var(--primitive-creme-claro);
+  --color-border-subtle: rgba(245, 242, 238, 0.10);
+  --color-border-default: rgba(245, 242, 238, 0.18);
+  --color-border-strong: rgba(245, 242, 238, 0.30);
+  --color-error: #C96A57;
+  --color-success: #A8B18C;
+}
