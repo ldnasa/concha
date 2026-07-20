@@ -37,9 +37,16 @@
 
   <link rel="preload" as="image" href="assets/images/hero-poster.jpg" fetchpriority="high">
 
-  <link rel="stylesheet" href="design_system/tokens.css?v=1784560020">
-  <link rel="stylesheet" href="css/custom.css?v=1784560020">
-  <link rel="stylesheet" href="css/hero-scroll.css?v=1784560020">
+  <!-- Marca "JS ativo" ANTES do primeiro paint. Inline e sem defer de
+       proposito: e o unico jeito de o CSS abaixo saber, ja na primeira
+       pintura, que o hero-scroll.js vai assumir as camadas do palco.
+       Com JS desligado a classe nunca entra e as camadas seguem visiveis,
+       que e o comportamento degradado correto. -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <link rel="stylesheet" href="design_system/tokens.css?v=1784560021">
+  <link rel="stylesheet" href="css/custom.css?v=1784560021">
+  <link rel="stylesheet" href="css/hero-scroll.css?v=1784560021">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -582,8 +589,8 @@
     </div>
   </dialog>
 
-  <script src="js/nav.js?v=1784560020" defer></script>
-  <script src="js/hero-scroll.js?v=1784560020" defer></script>
+  <script src="js/nav.js?v=1784560021" defer></script>
+  <script src="js/hero-scroll.js?v=1784560021" defer></script>
   <script>
 
     // ---------------- Atalho de volta ao topo ----------------

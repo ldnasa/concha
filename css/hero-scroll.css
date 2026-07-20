@@ -108,6 +108,22 @@
 
 .stage-layer > * { pointer-events: auto; }
 
+/* Estado inicial das camadas que entram DEPOIS do hero (a placa do codigo
+   genetico e os dois tempos de "O problema").
+
+   Sem isto elas nascem com opacidade 1 e ficam empilhadas sobre o hero ate
+   o hero-scroll.js rodar. Como esse script e defer, ele so executa depois do
+   HTML ser parseado: da tempo de a placa aparecer por cima da concha no
+   carregamento. O JS depois sobrescreve a opacidade inline a cada frame,
+   entao esta regra so governa a primeira pintura.
+
+   Escopo em .js (classe posta por script inline no <head>): com JavaScript
+   desligado nada apaga essas camadas, e mante-las escondidas esconderia o
+   conteudo pra sempre. O fallback estatico continua vencendo, porque
+   .scrolly.is-static usa !important. */
+.js .scrolly .layer-note,
+.js .scrolly .stage-beat { opacity: 0; }
+
 .stage-inner {
   width: 100%;
   max-width: var(--content-max);
@@ -200,10 +216,13 @@
 /* Blocos de texto da fase congelada. Todos ocupam a mesma area do grid, entao
    trocam por cima do mesmo fundo sem empurrar layout. Centrados pra fechar o
    arco no eixo em que o hero abriu. */
+/* O estado inicial (opacity 0) nao mora mais aqui: foi pra regra escopada em
+   .js mais acima, junto com a .layer-note, que sofria do mesmo problema e
+   tinha ficado de fora. Fonte unica, e sem esconder conteudo quando o JS
+   nao roda. */
 .stage-beat {
   justify-items: center;
   text-align: center;
-  opacity: 0; /* o JS assume a partir daqui; evita flash no primeiro paint */
 }
 
 .stage-beat .stage-inner {
